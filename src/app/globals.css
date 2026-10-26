@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ───── Палитра по умолчанию («racing») ───── */
+@theme {
+  --color-bg: #0b0b0d;
+  --color-surface: #141416;
+  --color-surface-2: #1d1d21;
+  --color-line: #2a2a30;
+  --color-ink: #f1f1f3;
+  --color-muted: #9a9aa4;
+  --color-accent: #e5202e;
+  --color-accent-2: #ffb81c;
+  --color-on-accent: #ffffff; /* цвет текста на кнопках акцентного цвета */
+  --color-ok: #22c55e;
+  --color-bad: #ff5c5c;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-inter), sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-spin-slow: spin 28s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-speed: speed 1.8s linear infinite;
+  --animate-glow: glow 3.5s ease-in-out infinite;
+  --animate-needle: needle 7s ease-in-out infinite;
+
+  @keyframes float {
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes speed {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateX(-130vw);
+      opacity: 0;
+    }
+  }
+  @keyframes glow {
+    50% {
+      opacity: 0.45;
+    }
+  }
+  /* Стрелка тахометра «газует» и возвращается на холостые */
+  @keyframes needle {
+    0%,
+    100% {
+      transform: rotate(-135deg);
+    }
+    40% {
+      transform: rotate(118deg);
+    }
+    48% {
+      transform: rotate(104deg);
+    }
+    58% {
+      transform: rotate(124deg);
+    }
+    75% {
+      transform: rotate(-40deg);
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ───── Другие палитры: включаются в файле src/lib/theme.ts ───── */
+html[data-palette="blue"] {
+  --color-bg: #060b16;
+  --color-surface: #0d1526;
+  --color-surface-2: #15203a;
+  --color-line: #213052;
+  --color-ink: #e8f0ff;
+  --color-muted: #8aa0c4;
+  --color-accent: #2f6bff;
+  --color-accent-2: #22d3ee;
+  --color-on-accent: #ffffff;
+}
+html[data-palette="lime"] {
+  --color-bg: #0a0c0a;
+  --color-surface: #121512;
+  --color-surface-2: #1a1f1a;
+  --color-line: #283028;
+  --color-ink: #eef3ea;
+  --color-muted: #8d9a88;
+  --color-accent: #b6ff2e;
+  --color-accent-2: #ffd23f;
+  --color-on-accent: #0a0c0a;
+}
+html[data-palette="orange"] {
+  --color-bg: #0a0c0f;
+  --color-surface: #12161b;
+  --color-surface-2: #1a2027;
+  --color-line: #262d36;
+  --color-ink: #e8ecf1;
+  --color-muted: #8b95a1;
+  --color-accent: #ff5a1f;
+  --color-accent-2: #ffb020;
+  --color-on-accent: #ffffff;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+  * {
+    border-color: var(--color-line);
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition duration-200 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply bg-accent text-on-accent hover:brightness-110 active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply border bg-surface-2 text-ink hover:border-accent hover:text-accent;
+  }
+  .btn-sm {
+    @apply px-3 py-2 text-sm;
+  }
+  .input {
+    @apply w-full rounded-xl border bg-surface-2 px-4 py-3 text-ink outline-none transition placeholder:text-muted focus:border-accent;
+  }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-mask {
+  mask-image: radial-gradient(ellipse at 60% 50%, #000 20%, transparent 70%);
 }

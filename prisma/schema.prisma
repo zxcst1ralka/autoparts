@@ -1,0 +1,186 @@
+// prisma/schema.prisma
+// Магазин автозапчастей: каталог, применимость к авто, заказы, личный кабинет.
+// Рассчитано на Prisma 6.x + PostgreSQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── Пользователи ─────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role      @default(USER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  addresses Address[]
+  orders    Order[]
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String? // «Дом», «Работа»
+  city       String
+  street     String
+  postalCode String?
+  isDefault  Boolean @default(false)
+
+  @@index([userId])
+}
+
+// ───────────── Каталог ─────────────
+
+model Category {
+  id       String     @id @default(cuid())
+  name     String
+  slug     String     @unique
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
+  parts    Part[]
+
+  @@index([parentId])
+}
+
+// Производитель запчасти (Bosch, Brembo, Lemförder...)
+model Brand {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  parts Part[]
+}
+
+model Part {
+  id          String   @id @default(cuid())
+  sku         String   @unique // внутренний артикул
+  name        String
+  slug        String   @unique
+  description String?
+  oemNumbers  String[] // оригинальные номера для кросс-поиска
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+  specs       Json? // характеристики: {"Диаметр": "280 мм", ...}
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  brandId    String
+  brand      Brand    @relation(fields: [brandId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  images     PartImage[]
+  fitments   Fitment[]
+  orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([name])
+}
+
+model PartImage {
+  id       String  @id @default(cuid())
+  partId   String
+  part     Part    @relation(fields: [partId], references: [id], onDelete: Cascade)
+  url      String
+  position Int     @default(0)
+  isMain   Boolean @default(false)
+
+  @@index([partId])
+}
+
+// ───────────── Применимость к автомобилям ─────────────
+
+model Vehicle {
+  id       String    @id @default(cuid())
+  make     String // Toyota
+  model    String // Camry
+  yearFrom Int
+  yearTo   Int?
+  engine   String? // 2.5 AT, 2AR-FE
+  fitments Fitment[]
+
+  @@index([make, model])
+}
+
+model Fitment {
+  partId    String
+  part      Part    @relation(fields: [partId], references: [id], onDelete: Cascade)
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@id([partId, vehicleId])
+}
+
+// ───────────── Заказы ─────────────
+
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  number    Int         @unique @default(autoincrement())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  status    OrderStatus @default(NEW)
+  total     Decimal     @db.Decimal(10, 2)
+
+  // Итоговая сумма (total) уже включает стоимость доставки
+  shippingCost   Decimal   @default(0) @db.Decimal(10, 2)
+  deliveryMethod String    @default("COURIER") // COURIER, PVZ, PICKUP
+  paymentMethod  String    @default("CARD") // CARD, CASH
+  paidAt         DateTime?
+  comment   String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Снимок адреса на момент заказа (адрес в профиле можно менять)
+  shipCity       String
+  shipStreet     String
+  shipPostalCode String?
+  contactName    String
+  contactPhone   String
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id       String  @id @default(cuid())
+  orderId  String
+  order    Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  partId   String
+  part     Part    @relation(fields: [partId], references: [id])
+  quantity Int
+  // Снимок цены и названия: история заказов не должна меняться при правке каталога
+  unitPrice Decimal @db.Decimal(10, 2)
+  partName  String
+  partSku   String
+
+  @@index([orderId])
+}

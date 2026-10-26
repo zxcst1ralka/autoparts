@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Order" ADD COLUMN     "deliveryMethod" TEXT NOT NULL DEFAULT 'COURIER',
+ADD COLUMN     "paidAt" TIMESTAMP(3),
+ADD COLUMN     "paymentMethod" TEXT NOT NULL DEFAULT 'CARD',
+ADD COLUMN     "shippingCost" DECIMAL(10,2) NOT NULL DEFAULT 0;
