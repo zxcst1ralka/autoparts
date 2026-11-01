@@ -37,7 +37,11 @@ export async function saveImage(file: File): Promise<string> {
 
   const name = `${randomUUID()}.${ext}`;
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  // На Vercel хранилище Blob подключается через BLOB_STORE_ID (новый способ, без токена)
+  // или через BLOB_READ_WRITE_TOKEN (старый способ). Подходит любой из двух.
+  const hasBlob = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
+
+  if (hasBlob) {
     const blob = await put(`parts/${name}`, buffer, {
       access: "public",
       contentType: file.type,
@@ -46,7 +50,7 @@ export async function saveImage(file: File): Promise<string> {
   }
 
   if (process.env.VERCEL) {
-    throw new Error("Не подключено хранилище Vercel Blob (нет BLOB_READ_WRITE_TOKEN)");
+    throw new Error("К проекту не подключено хранилище Vercel Blob");
   }
 
   const dir = path.join(process.cwd(), "public", "uploads");
