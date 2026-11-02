@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<defs>
+<radialGradient id="bg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#27303b"/><stop offset="1" stop-color="#0b0e12"/></radialGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#9fb0c8" stop-opacity=".18"/><stop offset="1" stop-color="#9fb0c8" stop-opacity="0"/></radialGradient>
+<linearGradient id="metalH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#58626e"/><stop offset=".28" stop-color="#cfd6de"/><stop offset=".5" stop-color="#8e99a6"/><stop offset=".72" stop-color="#e9eef3"/><stop offset="1" stop-color="#4f5964"/></linearGradient>
+<linearGradient id="metalV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe5eb"/><stop offset=".5" stop-color="#8e99a6"/><stop offset="1" stop-color="#4f5964"/></linearGradient>
+<linearGradient id="rubber" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0d0e10"/><stop offset=".4" stop-color="#34373c"/><stop offset="1" stop-color="#0d0e10"/></linearGradient>
+<filter id="blur" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+
+</defs>
+<rect width="800" height="600" fill="url(#bg)"/>
+<ellipse cx="400" cy="300" rx="320" ry="250" fill="url(#glow)"/>
+<ellipse cx="400" cy="560" rx="300" ry="16" fill="#000" opacity=".55" filter="url(#blur)"/><g transform="translate(0,-85) rotate(-4 400 300)">
+<rect x="90" y="318" width="620" height="12" rx="6" fill="#0c0d0f"/>
+<rect x="90" y="296" width="620" height="22" rx="11" fill="url(#metalV)" stroke="#39414a" stroke-width="2"/>
+<rect x="90" y="296" width="620" height="6" rx="3" fill="#fff" opacity=".35"/>
+<rect x="352" y="262" width="96" height="44" rx="10" fill="#1a1c20" stroke="#3a3f46" stroke-width="2"/>
+<circle cx="400" cy="284" r="9" fill="#9aa3ad"/><rect x="384" y="244" width="32" height="26" rx="5" fill="#2a2d33"/>
+</g><g transform="translate(0,80) rotate(-4 400 300)">
+<rect x="90" y="318" width="620" height="12" rx="6" fill="#0c0d0f"/>
+<rect x="90" y="296" width="620" height="22" rx="11" fill="url(#metalV)" stroke="#39414a" stroke-width="2"/>
+<rect x="90" y="296" width="620" height="6" rx="3" fill="#fff" opacity=".35"/>
+<rect x="352" y="262" width="96" height="44" rx="10" fill="#1a1c20" stroke="#3a3f46" stroke-width="2"/>
+<circle cx="400" cy="284" r="9" fill="#9aa3ad"/><rect x="384" y="244" width="32" height="26" rx="5" fill="#2a2d33"/>
+</g>
+</svg>
