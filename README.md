@@ -5,6 +5,19 @@
 
 > Это демонстрационный проект. Товары, цены и заказы тестовые, деньги при «оплате» не списываются,
 > данные карты нигде не сохраняются и не отправляются.
+## Скриншоты
+
+![Главная](screenshots/Home(1).png)
+![Главная](screenshots/Home(2).png)
+![Главная](screenshots/Home(3).png)
+![Главная](screenshots/Home(4).png)
+![Каталог](screenshots/Catalog.png)
+![Страница запчасти](screenshots/Page_Parts.png)
+![Оплата](screenshots/Orders.png)
+![Оплата](screenshots/Orders(2).png)
+![Личный кабинет](screenshots/Profile.png)
+![Админка](screenshots/Admin_Panel(1).png)
+![Мобильная версия](screenshots/mobile.png)
 
 ## Возможности
 
