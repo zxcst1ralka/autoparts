@@ -15,7 +15,7 @@
 ![Страница запчасти](screenshots/Page_Parts.png)
 ![Оплата](screenshots/Orders.png)
 ![Оплата](screenshots/Orders(2).png)
-![Личный кабинет](screenshots/Profile.png)
+![Личный кабинет](screenshots/Home_Profile.png)
 ![Админка](screenshots/Admin_Panel(1).png)
 ![Мобильная версия](screenshots/mobile.png)
 
